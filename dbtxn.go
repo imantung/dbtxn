@@ -27,7 +27,7 @@ type (
 		Rollback() error
 		Commit() error
 	}
-	// DBConn is interface for *db.DB
+	// DB is interface for *db.DB
 	DB interface {
 		Query(string, ...interface{}) (*sql.Rows, error)
 		QueryRow(string, ...interface{}) *sql.Row
@@ -63,7 +63,7 @@ func Use(ctx context.Context, db *sql.DB) (*UseHandler, error) {
 		return nil, errors.New("dbtxn: missing context.Context")
 	}
 
-	c := Find(ctx)
+	c := Get(ctx)
 	if c == nil { // NOTE: not transactional
 		return &UseHandler{DB: db}, nil
 	}
@@ -76,8 +76,8 @@ func Use(ctx context.Context, db *sql.DB) (*UseHandler, error) {
 	return &UseHandler{DB: tx, Context: c}, nil
 }
 
-// Find transaction context
-func Find(ctx context.Context) *Context {
+// Get transaction context from context.Context
+func Get(ctx context.Context) *Context {
 	if ctx == nil {
 		return nil
 	}
@@ -87,7 +87,7 @@ func Find(ctx context.Context) *Context {
 
 // Error of transaction
 func Error(ctx context.Context) error {
-	if c := Find(ctx); c != nil {
+	if c := Get(ctx); c != nil {
 		var msgs []string
 		for _, err := range c.Errs {
 			if err != nil {

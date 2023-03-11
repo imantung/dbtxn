@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRetrieve(t *testing.T) {
+func TestGet(t *testing.T) {
 	testcases := []struct {
 		TestName        string
 		Ctx             context.Context
@@ -36,7 +36,7 @@ func TestRetrieve(t *testing.T) {
 	}
 	for _, tt := range testcases {
 		t.Run(tt.TestName, func(t *testing.T) {
-			require.Equal(t, tt.ExpectedContext, dbtxn.Find(tt.Ctx))
+			require.Equal(t, tt.ExpectedContext, dbtxn.Get(tt.Ctx))
 		})
 	}
 }
