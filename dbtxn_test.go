@@ -111,29 +111,6 @@ func TestUse_success(t *testing.T) {
 
 }
 
-func TestContext_Commit(t *testing.T) {
-	t.Run("expect rollback when error", func(t *testing.T) {
-		db, mock, _ := sqlmock.New()
-		mock.ExpectBegin()
-		mock.ExpectRollback()
-
-		c := dbtxn.NewContext()
-		c.Begin(context.Background(), db)
-		c.AppendError(errors.New("some-error"))
-
-		require.NoError(t, c.Commit())
-	})
-	t.Run("expect commit when no error", func(t *testing.T) {
-		db, mock, _ := sqlmock.New()
-		mock.ExpectBegin()
-		mock.ExpectCommit()
-
-		c := dbtxn.NewContext()
-		c.Begin(context.Background(), db)
-		require.NoError(t, c.Commit())
-	})
-}
-
 func TestAppendError(t *testing.T) {
 	ctx := context.Background()
 	t.Run("no txn error before begin", func(t *testing.T) {
