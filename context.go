@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"strings"
+
+	"go.uber.org/multierr"
 )
 
 type (
@@ -61,9 +63,7 @@ func (c *Context) Commit() error {
 }
 
 func (c *Context) CommitWithError(err *error) {
-	if *err == nil {
-		*err = c.Commit()
-	}
+	*err = multierr.Append(*err, c.Commit())
 }
 
 // AppendError to append error to txn context

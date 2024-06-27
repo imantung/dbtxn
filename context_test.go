@@ -86,7 +86,7 @@ func TestContext_CommitWithError(t *testing.T) {
 		}
 
 		err := fn(context.Background())
-		require.EqualError(t, err, "function-error")
+		require.EqualError(t, err, "function-error; rollback-error")
 	})
 
 }
